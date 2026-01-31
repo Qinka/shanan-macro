@@ -130,27 +130,30 @@ pub fn toml_label(args: TokenStream, input: TokenStream) -> TokenStream {
 
   let vis = &input_ast.vis;
 
-  let expanded = quote! {
-      #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-      #vis enum #enum_name {
-          #(#enum_vars,)*
-          Unknown(u32),
-      }
+  let label_num = pairs.len() as u32;
 
-      impl WithLabel for #enum_name {
-          fn from_label_id(label_id: u32) -> Self {
-              match label_id {
-                  #(#vars_id,)*
-                  i => #enum_name::Unknown(i),
-              }
-          }
-          fn to_label_str(&self) -> String {
-              match self {
-                  #(#label_name,)*
-                  #enum_name::Unknown(i) => format!("unknown{}", i),
-              }
-          }
+  let expanded = quote! {
+    #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+    #vis enum #enum_name {
+        #(#enum_vars,)*
+        Unknown(u32),
+    }
+
+    impl WithLabel for #enum_name {
+      const LABEL_NUM: u32 = #label_num;
+      fn from_label_id(label_id: u32) -> Self {
+        match label_id {
+          #(#vars_id,)*
+          i => #enum_name::Unknown(i),
+        }
       }
+      fn to_label_str(&self) -> String {
+        match self {
+          #(#label_name,)*
+          #enum_name::Unknown(i) => format!("unknown{}", i),
+        }
+      }
+    }
   };
 
   // 看这里
