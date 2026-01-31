@@ -128,6 +128,12 @@ pub fn toml_label(args: TokenStream, input: TokenStream) -> TokenStream {
     }
   });
 
+  let label_id = pairs.iter().map(|(ident, id, _)| {
+    quote! {
+      #enum_name::#ident => #id
+    }
+  });
+
   let vis = &input_ast.vis;
 
   let label_num = pairs.len() as u32;
@@ -151,6 +157,12 @@ pub fn toml_label(args: TokenStream, input: TokenStream) -> TokenStream {
         match self {
           #(#label_name,)*
           #enum_name::Unknown(i) => format!("unknown{}", i),
+        }
+      }
+      fn to_label_id(&self) -> u32 {
+        match self {
+          #(#label_id, )*
+          #enum_name::Unknown(i) => *i,
         }
       }
     }
