@@ -2,6 +2,12 @@
 name = "shanan-macro"
 version = "0.1.0"
 edition = "2024"
+authors = ["Johann Li <me@qinka.pro> @Qinka"]
+description = "the macros used in shanan"
+repository = "https://github.com/Qinka/shanan-macro"
+keywords = [ ]
+categories = [ ]
+license = "Apache-2.0"
 
 
 [lib]
